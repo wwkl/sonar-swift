@@ -201,6 +201,8 @@ appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguratio
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 # The name of your binary file (application)
 binaryName=''; readParameter binaryName 'sonar.swift.appName'
+# The path of your binary file (application)
+binaryFile=''; readParameter binaryFile 'sonar.swift.binaryFile'
 # Get the path of plist file
 plistFile=`xcodebuild -showBuildSettings -project "${projectFile}" | grep -i 'PRODUCT_SETTINGS_PATH' -m 1 | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
 # Number version from plist if no sonar.projectVersion
@@ -318,6 +320,10 @@ if [ "$unittests" = "on" ]; then
     slatherCmd=($SLATHER_CMD coverage)
     if [[ ! -z "$binaryName" ]]; then
     	slatherCmd+=( --binary-basename "$binaryName")
+    fi
+    
+    if [[ ! -z "$binaryFile" ]]; then
+    	slatherCmd+=( --binary-file "$binaryFile")
     fi
 
     slatherCmd+=( --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
